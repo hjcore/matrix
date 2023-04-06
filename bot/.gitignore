@@ -1,0 +1,13 @@
+dist
+data
+build
+release/
+.idea/
+.vscode/
+.DS_Store
+**/*/node_modules
+yarn.lock
+yarn-error.log
+package-lock.json
+node_modules
+.env

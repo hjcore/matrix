@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  matrix-web:
+    image: ghcr.io/cinnyapp/cinny:v2.2.6
+    networks:
+      - proxy
+    container_name: matrix-web
+    restart: unless-stopped
+    volumes:
+      - ./config/web.json:/app/config.json
+  matrix-rust:
+    image: matrixconduit/matrix-conduit:next-commit-f704169a
+    restart: unless-stopped
+    user: root
+    volumes:
+      - ./data/rust-matrix:/var/lib/matrix-conduit/
+    environment:
+      CONDUIT_SERVER_NAME: ${CONDUIT_SERVER_NAME}
+      CONDUIT_TRUSTED_SERVERS: '["matrix.org"]'
+      CONDUIT_ALLOW_REGISTRATION : 'true'
+      CONDUIT_ADDRESS: 0.0.0.0
+      CONDUIT_PORT: 80
+      # CONDUIT_LOG: info  # default is: "warn,_=off,sled=off"
+      # CONDUIT_ALLOW_JAEGER: 'false'
+      CONDUIT_ALLOW_ENCRYPTION: 'true'
+      CONDUIT_ALLOW_FEDERATION: 'false'
+      CONDUIT_DATABASE_PATH: /var/lib/matrix-conduit/
+      # CONDUIT_WORKERS: 10
+      CONDUIT_MAX_CONCURRENT_REQUESTS: 100
+      CONDUIT_MAX_REQUEST_SIZE: 20_000_000  # in bytes, ~20 MB
+    container_name: matrix
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
+    name: proxy

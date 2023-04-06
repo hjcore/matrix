@@ -1,0 +1,16 @@
+build
+data
+**/*/data
+release/
+.idea/
+.vscode/
+.DS_Store
+**/*/node_modules
+yarn.lock
+yarn-error.log
+package-lock.json
+node_modules
+test
+go.sum
+.env
+dist
