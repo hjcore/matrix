@@ -2,6 +2,7 @@ import { ChatGPTAPI } from 'chatgpt';
 import { MatrixClient } from 'matrix-bot-sdk';
 import fetch from 'node-fetch';
 import { OPENAI_TOKEN } from "../env.js";
+import { readConversationFromDB, readValue, storeConversationToDB } from "../database/index.js";
 
 let chatGPTAPIInstance: ChatGPTAPI | null = null;
 
@@ -41,6 +42,7 @@ let commandsResolver: CommandsResolver = {
 }
 
 export function findConversationListInGraph(roomId: string) {
+  // return readValue(roomId);
   return graphOfRoomId.find(elm => elm.roomId === roomId)
 }
 
@@ -75,9 +77,11 @@ export function handleConversationAndRoom(conversationId: string, roomId: string
 export async function sendMessage(roomId: string, message: string) {
   if (!chatGPTAPIInstance) return
   const historyConversation = findConversationListInGraph(roomId);
+  const matchConversationHistory = await readConversationFromDB(roomId);
+  console.log("matchConversationHistory", matchConversationHistory);
   let matchCoverationId: string | undefined
-  if (historyConversation) {
-    matchCoverationId = historyConversation.conversationId
+  if (matchConversationHistory) {
+    matchCoverationId = matchConversationHistory.conversationId
   } else {
     matchCoverationId = undefined
   }
@@ -86,6 +90,8 @@ export async function sendMessage(roomId: string, message: string) {
   });
 
   // update conversation id or push conversation id
+  
+  await storeConversationToDB({ roomId, conversationId: response.id });
   handleConversationAndRoom(response.id, roomId)
 
   return response.text

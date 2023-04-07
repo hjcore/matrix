@@ -8,3 +8,5 @@ export const OPENAI_TOKEN = process.env.OPENAI_TOKEN || "";
 export const HOME_SERVER = process.env.HOME_SERVER || "";
 export const MATRIX_USER_BLACK_LIST = process.env.MATRIX_USER_BLACK_LIST || [];
 export const MATRIX_ROOM_BLACK_LIST = process.env.MATRIX_ROOM_BLACK_LIST || [];
+export const KEYV_STORAGE_TYPE=process.env.KEYV_STORAGE_TYPE || "file";
+export const KEYV_STORAGE_PATH=process.env.KEYV_STORAGE_PATH || "./storage";

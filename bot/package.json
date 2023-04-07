@@ -21,6 +21,7 @@
     "dotenv": "^16.0.3",
     "http-proxy-agent": "^5.0.0",
     "keyv": "^4.5.2",
+    "keyv-file": "^0.2.0",
     "lodash": "^4.17.21",
     "markdown-it": "^13.0.1",
     "matrix-bot-sdk": "^0.6.4",

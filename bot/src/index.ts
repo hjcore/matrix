@@ -10,6 +10,7 @@ import {
 } from 'matrix-bot-sdk';
 import messageObserver from "./messageObserver/index.js";
 import { HOME_SERVER } from "./env.js";
+import { createDB } from "./database/index.js";
 
 let CLIENT: MatrixClient | null = null;
 
@@ -32,6 +33,8 @@ LogService.muteModule('MatrixHttpClient');
 LogService.trace = LogService.error;
 
 const client = new MatrixClient(config.homeServer, config.accessToken, storage, crypto);
+
+createDB("chatgpt-bot-storage");
 
 AutojoinRoomsMixin.setupOnClient(client);
 

@@ -38,11 +38,6 @@ function getRootEventId(event: MessageEvent) {
   return (relatesTo && relatesTo.event_id !== undefined) ? relatesTo.event_id : event.event_id;
 }
 
-function getStorageKey(event: MessageEvent, roomId: string) {
-  const rootEventId: string = getRootEventId(event)
-  return rootEventId;
-}
-
 /**
  * 
  * message will be ignored in following cases:
