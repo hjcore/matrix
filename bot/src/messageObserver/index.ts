@@ -4,7 +4,9 @@ import Markdown from "markdown-it";
 import { sendMessage, installChatGTPAPI } from "./chatgpt_model.js";
 import { sendError } from "../utils.js";
 import { MATRIX_ROOM_BLACK_LIST, MATRIX_USER_BLACK_LIST } from "../env.js";
+import { storeValue, createDB } from "../database/index.js";
 
+createDB("chatgpt_bot");
 installChatGTPAPI(); // initial gpt instance
 const markdown = Markdown(); // initial markdown
 
@@ -109,6 +111,7 @@ export async function sendReply(client: MatrixClient, roomId: string, rootEventI
   console.log("------ finalContent", finalContent)
 
   await client.sendEvent(roomId, "m.room.message", finalContent);
+
 }
 
 

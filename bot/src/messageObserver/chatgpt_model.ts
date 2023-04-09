@@ -2,13 +2,22 @@ import { ChatGPTAPI } from 'chatgpt';
 import { MatrixClient } from 'matrix-bot-sdk';
 import fetch from 'node-fetch';
 import { OPENAI_TOKEN } from "../env.js";
-import { readConversationFromDB, readValue, storeConversationToDB } from "../database/index.js";
+import { readConversationFromDB, readValue, storeConversationToDB, db, conversation_db } from "../database/index.js";
+
 
 let chatGPTAPIInstance: ChatGPTAPI | null = null;
 
 export function installChatGTPAPI () {
+  console.log("conversation_db", conversation_db, db)
+
   chatGPTAPIInstance =  new ChatGPTAPI({
     apiKey: OPENAI_TOKEN || '',
+    messageStore: conversation_db,
+    // getMessageById: (id) => {
+    //   const result = db.get(id);
+    //   console.log("getMessageById", result)
+    //   return result
+    // },
     fetch: (url, options) => {
       // const defaultOptions = {
       //   agent: proxy("http://127.0.0.1:10900")
@@ -79,20 +88,29 @@ export async function sendMessage(roomId: string, message: string) {
   const historyConversation = findConversationListInGraph(roomId);
   const matchConversationHistory = await readConversationFromDB(roomId);
   console.log("matchConversationHistory", matchConversationHistory);
-  let matchCoverationId: string | undefined
+  let matchParentMessageId: string | undefined
   if (matchConversationHistory) {
-    matchCoverationId = matchConversationHistory.conversationId
+    matchParentMessageId = matchConversationHistory.parentMessageId
   } else {
-    matchCoverationId = undefined
+    matchParentMessageId = undefined
   }
   const response = await chatGPTAPIInstance.sendMessage(message, {
-    parentMessageId: matchCoverationId
+    parentMessageId: matchParentMessageId
   });
+
+  console.log("response -------", response);
 
   // update conversation id or push conversation id
   
-  await storeConversationToDB({ roomId, conversationId: response.id });
-  handleConversationAndRoom(response.id, roomId)
+  await storeConversationToDB({ roomId, parentMessageId: response.id });
+  // // wait for redis to finish and then disconnect
+  // await new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     conversation_db.disconnect()
+  //     resolve(true)
+  //   }, 1000)
+  // })
+  // handleConversationAndRoom(response.id, roomId)
 
   return response.text
 }
