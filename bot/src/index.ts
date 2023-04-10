@@ -22,7 +22,7 @@ console.log("home server", HOME_SERVER);
 
 const config = {
   homeServer: HOME_SERVER,
-  accessToken: 'ro2s0ZI6P0kI1l5NrG7fhbn5tjxpvo26',
+  accessToken: 'zWxjynAy7LRaq2N0RO1tRQzuvxHdcL36',
 };
 
 LogService.setLogger(new RichConsoleLogger());

@@ -108,8 +108,6 @@ export async function sendReply(client: MatrixClient, roomId: string, rootEventI
   const content = rich ? { ...contentCommon, ...contentRichOnly } : { ...contentCommon, ...contentTextOnly };
   const finalContent = thread ? { ...content, ...contentThreadOnly } : content
 
-  console.log("------ finalContent", finalContent)
-
   await client.sendEvent(roomId, "m.room.message", finalContent);
 
 }
@@ -117,7 +115,8 @@ export async function sendReply(client: MatrixClient, roomId: string, rootEventI
 
 export default async function messageObserver(roomId: string, messageEvent: MessageEvent, client: MatrixClient) {
 
-  console.log("message is comming", messageEvent, client, roomId)
+  console.log("message is comming", messageEvent.content, roomId)
+  // const history = await m
 
   const shouldBeIgnore = await messageShouldBeIgnore(roomId, messageEvent, client)
   
@@ -129,6 +128,12 @@ export default async function messageObserver(roomId: string, messageEvent: Mess
   const chatGPTResponse = await sendMessage(roomId, messageEvent.content.body).catch(error => {
     sendError(client, "The bot has encountered an error, please contact your administrator.", roomId, messageEvent.event_id)
   });
+
+  console.log("chatGPTResponse- -------", chatGPTResponse, messageEvent.content.body);
+
+
+  if (chatGPTResponse === undefined) return;
+
 
   const isThread = checkIsThread(messageEvent);
 

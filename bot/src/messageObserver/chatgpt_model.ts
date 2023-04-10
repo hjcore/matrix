@@ -18,17 +18,17 @@ export function installChatGTPAPI () {
     //   console.log("getMessageById", result)
     //   return result
     // },
-    fetch: (url, options) => {
-      // const defaultOptions = {
-      //   agent: proxy("http://127.0.0.1:10900")
-      // }
-      // const mergedOptions = {
-      //   ...defaultOptions,
-      //   ...options
-      // }
-      // console.log("mergedOptions", mergedOptions)
-      return fetch("https://openai.1rmb.tk/v1/chat/completions", options);
-    }
+    // fetch: (url, options) => {
+    //   // const defaultOptions = {
+    //   //   agent: proxy("http://127.0.0.1:10900")
+    //   // }
+    //   // const mergedOptions = {
+    //   //   ...defaultOptions,
+    //   //   ...options
+    //   // }
+    //   // console.log("mergedOptions", mergedOptions)
+    //   return fetch("https://openai.1rmb.tk/v1/chat/completions", options);
+    // }
   });
 }
 
@@ -86,8 +86,8 @@ export function handleConversationAndRoom(conversationId: string, roomId: string
 export async function sendMessage(roomId: string, message: string) {
   if (!chatGPTAPIInstance) return
   const historyConversation = findConversationListInGraph(roomId);
+
   const matchConversationHistory = await readConversationFromDB(roomId);
-  console.log("matchConversationHistory", matchConversationHistory);
   let matchParentMessageId: string | undefined
   if (matchConversationHistory) {
     matchParentMessageId = matchConversationHistory.parentMessageId
